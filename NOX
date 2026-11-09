@@ -1,0 +1,1088 @@
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local LocalPlayer = Players.LocalPlayer
+local flag = false
+local str = "BACK"
+local str1 = "BACK"
+local num = 0
+local num1 = 2
+local num2 = 1.31
+local num3 = 1.5
+local num4 = -1.42
+local num5 = 1.4
+
+local tbl = {
+	BACK = {height = -1.42, z = 1.4},
+	FACE = {height = 0.84, z = -0.83},
+	AUTO_BACK = {height = -1.42, z = 1.4},
+	AUTO_FACE = {height = 0.84, z = -0.83},
+}
+
+local tbl1 = {}
+local tbl2 = {}
+local num6 = 1
+local num7 = 0
+local num8 = 3
+local num9 = 0
+local v1
+local HumanoidRootPart
+local connection
+local CFrame1
+local flag1 = false
+local uDim2 = UDim2.new(0, 260, 0, 340)
+local Position
+local uDim21 = UDim2.new(0, 260, 0, 28)
+local FallenPartsDestroyHeight = workspace.FallenPartsDestroyHeight
+local flag2 = false
+local flag3 = false
+local connection1
+local textButton5
+local textLabel2
+local textLabel1
+local scrollingFrame1
+local uIListLayout1
+local flag5
+local Position1
+local Position2
+local frame3
+local bodyVelocity
+local bodyGyro
+local num10 = 8
+local num11 = 1.2
+local num12 = 0
+local flag4 = false
+local str2 = "SKY"
+
+local function func(character)
+	if not character then
+		return nil
+	end
+	return character:FindFirstChild("UpperTorso") or character:FindFirstChild("Torso") or character:FindFirstChild("HumanoidRootPart")
+end
+
+local function func1(character)
+	return character and character:FindFirstChild("Head")
+end
+
+local function func2(character)
+	if not character then
+		return
+	end
+
+	v1 = character
+	HumanoidRootPart = character:WaitForChild("HumanoidRootPart", 5)
+end
+
+if LocalPlayer.Character then
+	func2(LocalPlayer.Character)
+end
+
+LocalPlayer.CharacterAdded:Connect(func2)
+
+local function func3()
+	if str == "AUTO" then
+		return str1
+	end
+	return str
+end
+
+local function func4()
+	if str == "AUTO" then
+		return str1 == "BACK" and "AUTO_BACK" or "AUTO_FACE"
+	end
+	return str
+end
+
+local function func5()
+	local v1 = func4()
+	local v2 = tbl[v1]
+
+	if v2 then
+		num4 = v2.height
+		num5 = v2.z
+	end
+end
+
+local function func6()
+	if #tbl2 == 0 then
+		return nil
+	end
+
+	if num6 > #tbl2 then
+		num6 = 1
+	end
+
+	return tbl2[num6]
+end
+
+local function func7()
+	tbl2 = {}
+
+	for k in pairs(tbl1) do
+		if k and k.Parent then
+			table.insert(tbl2, k)
+		else
+			tbl1[k] = nil
+		end
+	end
+
+	if num6 > #tbl2 then
+		num6 = 1
+	end
+
+	if textLabel1 then
+		local v1 = #tbl2
+		if v1 == 0 then
+			textLabel1.Text = "Selected: 0"
+		elseif v1 == 1 then
+			textLabel1.Text = "Selected: 1 → " .. tbl2[1].DisplayName
+		else
+			textLabel1.Text = "Selected: " .. v1 .. " (cycling)"
+		end
+	end
+end
+
+local function func8()
+	if flag2 then
+		return
+	end
+
+	flag2 = true
+	workspace.FallenPartsDestroyHeight = (0/0)
+end
+
+local function func9()
+	if not flag2 then
+		return
+	end
+
+	flag2 = false
+	workspace.FallenPartsDestroyHeight = FallenPartsDestroyHeight
+end
+
+local function func10()
+	if not textButton5 then
+		return
+	end
+	if flag3 then
+		local textButton5Ref = textButton5
+		textButton5Ref.Text = "Anti Sit: ON"
+		textButton5Ref.BackgroundColor3 = Color3.fromRGB(0, 190, 65)
+	else
+		local textButton5Ref1 = textButton5
+		textButton5Ref1.Text = "Anti Sit: OFF"
+		textButton5Ref1.BackgroundColor3 = Color3.fromRGB(0, 105, 35)
+	end
+end
+
+local function func11()
+	if connection1 then
+		return
+	end
+
+	local function func(character)
+		local Humanoid = character:WaitForChild("Humanoid")
+		Humanoid.Sit = false
+		Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, false)
+	end
+
+	if LocalPlayer.Character then
+		func(LocalPlayer.Character)
+	end
+
+	connection1 = LocalPlayer.CharacterAdded:Connect(func)
+	flag3 = true
+	func10()
+end
+
+local function func12()
+	if not connection1 then
+		return
+	end
+
+	connection1:Disconnect()
+	connection1 = nil
+	flag3 = false
+	local v1 = LocalPlayer.Character and LocalPlayer.Character:FindFirstChild("Humanoid")
+
+	if v1 then
+		v1.Sit = false
+		v1:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
+	end
+
+	func10()
+end
+
+local function func13(parent, arg2, arg3, arg4, arg5, arg6)
+	local frame = Instance.new("Frame")
+	frame.Size = UDim2.new(0.5, -17, 0, 26)
+	frame.BackgroundTransparency = 1
+	frame.Parent = parent
+	local textLabel = Instance.new("TextLabel")
+	textLabel.Size = UDim2.new(1, 0, 0, 11)
+	textLabel.BackgroundTransparency = 1
+	local v1 = string.format("%.2f", arg5)
+	textLabel.Text = arg2 .. ": " .. v1 .. arg6
+	textLabel.TextColor3 = Color3.fromRGB(205, 255, 215)
+	textLabel.Font = Enum.Font.GothamBold
+	textLabel.TextSize = 10
+	textLabel.TextXAlignment = Enum.TextXAlignment.Left
+	textLabel.Parent = frame
+	local frame1 = Instance.new("Frame")
+	frame1.Size = UDim2.new(1, 0, 0, 8)
+	frame1.Position = UDim2.new(0, 0, 0, 13)
+	frame1.BackgroundColor3 = Color3.fromRGB(2, 12, 6)
+	frame1.BorderSizePixel = 0
+	frame1.Parent = frame
+	local frame2 = Instance.new("Frame")
+	frame2.Size = UDim2.new((arg5 - arg3) / (arg4 - arg3), 0, 1, 0)
+	frame2.BackgroundColor3 = Color3.fromRGB(0, 255, 90)
+	frame2.BorderSizePixel = 0
+	frame2.Parent = frame1
+	local textButton = Instance.new("TextButton")
+	textButton.Size = UDim2.new(0, 14, 0, 14)
+	textButton.Position = UDim2.new((arg5 - arg3) / (arg4 - arg3), -7, 0.5, -7)
+	textButton.BackgroundColor3 = Color3.fromRGB(100, 255, 145)
+	textButton.Text = ""
+	textButton.BorderSizePixel = 0
+	textButton.Parent = frame1
+	local v2 = arg3
+	local v3 = arg4
+	local v4 = arg5
+	local flag = false
+
+	local function func()
+		local v1 = v4
+		textLabel.Text = arg2 .. ": " .. string.format("%.2f", v1) .. arg6
+		local v5 = math.clamp((v1 - v2) / (v3 - v2), 0, 1)
+		frame2.Size = UDim2.new(v5, 0, 1, 0)
+		textButton.Position = UDim2.new(v5, -7, 0.5, -7)
+	end
+
+	local function func1()
+		local v1 = UserInputService:GetMouseLocation().X - frame1.AbsolutePosition.X
+		local v5 = math.clamp(v1 / frame1.AbsoluteSize.X, 0, 1)
+		v4 = math.clamp(v2 + v5 * (v3 - v2), v2, v3)
+		func()
+		return v4
+	end
+
+	local function func2(height)
+		if arg2 == "Distance" then
+			num5 = height
+			tbl[func4()].z = height
+		elseif arg2 == "Height" then
+			num4 = height
+			tbl[func4()].height = height
+		elseif arg2 == "Sway Speed" then
+			num2 = height
+		elseif arg2 == "Sway Amount" then
+			num3 = height
+		elseif arg2 == "Auto-switch" then
+			num1 = height
+		elseif arg2 == "Cycle Player" then
+			num8 = height
+		elseif arg2 == "Fakeout After" then
+			num10 = height
+		elseif arg2 == "Fakeout Time" then
+			num11 = height
+		end
+	end
+
+	local function func3(arg1)
+		if arg1.UserInputType == Enum.UserInputType.MouseButton1 or arg1.UserInputType == Enum.UserInputType.Touch then
+			flag = true
+		end
+	end
+
+	textButton.InputBegan:Connect(func3)
+
+	frame1.InputBegan:Connect(function(input)
+		func3(input)
+		if flag then
+			func2((func1()))
+		end
+	end)
+
+	UserInputService.InputChanged:Connect(function(input)
+		if flag and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+			func2((func1()))
+		end
+	end)
+
+	UserInputService.InputEnded:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+			flag = false
+		end
+	end)
+
+	return {
+		container = frame,
+		updateRange = function(arg1, arg2)
+			v2 = arg1
+			v3 = arg2
+			v4 = math.clamp(v4, arg1, arg2)
+			func()
+		end,
+		setValue = function(arg1)
+			v4 = arg1
+			func()
+		end,
+		getValue = function()
+			return v4
+		end,
+	}
+end
+
+local function func14()
+	if not frame3 then
+		return
+	end
+
+	for _, child in ipairs(frame3:GetChildren()) do
+		if child:IsA("Frame") then
+			child:Destroy()
+		end
+	end
+
+	local v1 = func3()
+	local v2 = func4()
+	local num = 1.4
+	local num1 = 5
+	local num2 = -2
+	local num3 = 3
+
+	if v1 == "FACE" then
+		num = -5
+		num1 = -0.83
+		num2 = -1
+		num3 = 7
+	end
+
+	local height = tbl[v2].height
+	local frame3Ref = frame3
+	func13(frame3Ref, "Distance", num, num1, tbl[v2].z, "")
+	func13(frame3Ref, "Height", num2, num3, height, "")
+end
+
+local function func15()
+	if not flag or not HumanoidRootPart or #tbl2 == 0 then
+		return
+	end
+
+	CFrame1 = HumanoidRootPart.CFrame
+	func8()
+	num = 0
+	num7 = 0
+	num12 = 0
+	flag4 = false
+	func5()
+
+	if bodyVelocity then
+		bodyVelocity:Destroy()
+	end
+
+	if bodyGyro then
+		bodyGyro:Destroy()
+	end
+
+	bodyVelocity = Instance.new("BodyVelocity")
+	local bodyVelocityRef = bodyVelocity
+	bodyVelocityRef.MaxForce = Vector3.new(9000000000, 9000000000, 9000000000)
+	bodyVelocityRef.Velocity = Vector3.zero
+	bodyVelocityRef.Parent = HumanoidRootPart
+	bodyGyro = Instance.new("BodyGyro")
+	local bodyGyroRef = bodyGyro
+	bodyGyroRef.MaxTorque = Vector3.new(9000000000, 9000000000, 9000000000)
+	bodyGyroRef.P = 30000
+	bodyGyroRef.D = 1000
+	bodyGyroRef.Parent = HumanoidRootPart
+
+	if connection then
+		connection:Disconnect()
+	end
+
+	connection = RunService.Heartbeat:Connect(function(deltaTime)
+		if
+			not HumanoidRootPart
+			or not HumanoidRootPart.Parent
+			or v1 and v1:FindFirstChild("Humanoid") and v1.Humanoid.Health <= 0
+		then
+			pcall(function()
+				sethiddenproperty(HumanoidRootPart, "PhysicsRepRootPart", nil)
+			end)
+
+			if connection then
+				connection:Disconnect()
+			end
+
+			return
+		end
+
+		num12 = num12 + deltaTime
+
+		if not flag4 and num12 >= num10 then
+			flag4 = true
+			num12 = 0
+			str2 = math.random(1, 2) == 1 and "SKY" or "VOID"
+		end
+
+		if flag4 then
+			if num12 >= num11 then
+				flag4 = false
+				num12 = 0
+			else
+				local v2 = v1 and v1:FindFirstChild("Humanoid")
+
+				if v2 then
+					v2.Sit = false
+					v2.PlatformStand = true
+				end
+
+				if str2 == "SKY" then
+					HumanoidRootPart.Velocity = Vector3.new(0.5, 0.5, 0.5)
+					for _, child in pairs(v1:GetChildren()) do
+						if child:IsA("BasePart") then
+							child.CanTouch = false
+							child.CanCollide = false
+							local v3 = math.random(-10, 10)
+							child.CFrame = CFrame.new(999999999999 + v3, 2000 + v3, 999999999999 + v3)
+							child.Velocity = Vector3.new(100, 100, 100)
+						end
+					end
+				else
+					HumanoidRootPart.Velocity = Vector3.new(-0.5, -0.5, -0.5)
+					for _, child1 in pairs(v1:GetChildren()) do
+						if child1:IsA("BasePart") then
+							child1.CanTouch = false
+							child1.CanCollide = false
+							local v4 = math.random(-10, 10)
+							child1.CFrame = CFrame.new(-999999999999 + v4, -2000 + v4, -999999999999 + v4)
+							child1.Velocity = Vector3.new(-100, -100, -100)
+						end
+					end
+				end
+
+				if textLabel2 then
+					textLabel2.Text = "FAKEOUT → " .. str2
+				end
+
+				return
+			end
+		end
+
+		if #tbl2 > 1 then
+			num7 = num7 + deltaTime
+			if num7 >= num8 then
+				num7 = 0
+				num6 = num6 + 1
+
+				if num6 > #tbl2 then
+					num6 = 1
+				end
+			end
+		end
+
+		local v5 = func6()
+
+		if not v5 or not v5.Parent then
+			func7()
+			v5 = func6()
+
+			if not v5 then
+				stopBang()
+				return
+			end
+		end
+
+		local Character = v5.Character
+		local v6 = Character and func(Character)
+		local v7 = func1(Character)
+
+		if not v6 or not v6:IsDescendantOf(workspace) then
+			return
+		end
+
+		if str == "AUTO" then
+			num = num + deltaTime
+
+			if num >= num1 then
+				num = 0
+				str1 = str1 == "BACK" and "FACE" or "BACK"
+				func5()
+				func14()
+			end
+
+			if textLabel2 then
+				textLabel2.Text = "AUTO → " .. str1 .. " | " .. v5.DisplayName
+			end
+		elseif textLabel2 then
+			textLabel2.Text = v5.DisplayName
+		end
+
+		pcall(function()
+			sethiddenproperty(HumanoidRootPart, "PhysicsRepRootPart", v6)
+		end)
+
+		num9 = num9 + deltaTime * 10 * num2
+		local v8 = math.sin(num9) * num3
+		local v10
+
+		if func3() == "BACK" then
+			local v9 = math.clamp(num5 + v8, 1.4, 5)
+			v10 = v6.CFrame * CFrame.new(0, num4, v9)
+
+			if v1 and v1:FindFirstChild("Humanoid") then
+				v1.Humanoid.Sit = false
+				v1.Humanoid.PlatformStand = true
+			end
+		else
+			if v7 and v7:IsA("BasePart") then
+				local v11 = v6.CFrame:PointToObjectSpace(v7.Position)
+				local v12 = v11.Y + v7.Size.Y / 2 + num4
+				local v13 = math.clamp(num5 + v8, -5, -0.83)
+				v10 = v6.CFrame * CFrame.new(v11.X, v12, v11.Z + v13) * CFrame.Angles(0, math.pi, 0)
+			else
+				local v14 = math.clamp(num5 + v8, -5, -0.83)
+				v10 = v6.CFrame * CFrame.new(0, 3.5 + num4, v14) * CFrame.Angles(0, math.pi, 0)
+			end
+			if v1 and v1:FindFirstChild("Humanoid") then
+				v1.Humanoid.Sit = true
+				v1.Humanoid.PlatformStand = true
+			end
+		end
+
+-- https://leakd.fr
+		HumanoidRootPart.CFrame = v10
+
+		if bodyGyro then
+			bodyGyro.CFrame = v10
+		end
+
+		if bodyVelocity then
+			bodyVelocity.Velocity = (v10.Position - HumanoidRootPart.Position) * 80
+		end
+	end)
+end
+
+local function func16()
+	if connection then
+		connection:Disconnect()
+		connection = nil
+	end
+
+	pcall(function()
+		sethiddenproperty(HumanoidRootPart, "PhysicsRepRootPart", nil)
+	end)
+
+	if bodyVelocity then
+		bodyVelocity:Destroy()
+		bodyVelocity = nil
+	end
+
+	if bodyGyro then
+		bodyGyro:Destroy()
+		bodyGyro = nil
+	end
+
+	flag4 = false
+	num12 = 0
+
+	if CFrame1 and HumanoidRootPart and HumanoidRootPart.Parent then
+		HumanoidRootPart.CFrame = CFrame1
+		HumanoidRootPart.Velocity = Vector3.zero
+		HumanoidRootPart.AssemblyLinearVelocity = Vector3.zero
+		HumanoidRootPart.AssemblyAngularVelocity = Vector3.zero
+
+		if v1 and v1:FindFirstChild("Humanoid") then
+			v1.Humanoid.Sit = false
+			v1.Humanoid.PlatformStand = false
+		end
+	end
+
+	CFrame1 = nil
+	num9 = 0
+	num = 0
+	num7 = 0
+	func9()
+end
+
+LocalPlayer.CharacterAdded:Connect(function(character)
+	func2(character)
+	if flag then
+		task.wait(0.5)
+		if flag and #tbl2 > 0 then
+			func15()
+		end
+	end
+end)
+
+local function func17(arg1)
+	if not scrollingFrame1 then
+		return
+	end
+
+	for _, child in ipairs(scrollingFrame1:GetChildren()) do
+		if child:IsA("TextButton") then
+			child:Destroy()
+		end
+	end
+
+	local v1 = (arg1 or ""):lower()
+
+	for _, player in ipairs(Players:GetPlayers()) do
+		if player ~= LocalPlayer then
+			local v2 = string.find(string.lower(player.Name), v1, 1, true)
+			local v3 = string.find(string.lower(player.DisplayName), v1, 1, true)
+
+			if v1 == "" or v2 or v3 then
+				local textButton = Instance.new("TextButton")
+				textButton.Size = UDim2.new(1, -4, 0, 20)
+				textButton.BackgroundColor3 = tbl1[player] and Color3.fromRGB(0, 190, 75) or Color3.fromRGB(15, 35, 23)
+				textButton.BorderSizePixel = 0
+				textButton.Text = " " .. player.DisplayName .. " (@" .. player.Name .. ")"
+				textButton.TextColor3 = Color3.new(1, 1, 1)
+				textButton.Font = Enum.Font.Gotham
+				textButton.TextSize = 11
+				textButton.TextXAlignment = Enum.TextXAlignment.Left
+				textButton.AutoButtonColor = false
+				textButton.Parent = scrollingFrame1
+
+				textButton.MouseButton1Click:Connect(function()
+					if tbl1[player] then
+						tbl1[player] = nil
+						textButton.BackgroundColor3 = Color3.fromRGB(15, 35, 23)
+					else
+						tbl1[player] = true
+						textButton.BackgroundColor3 = Color3.fromRGB(0, 190, 75)
+					end
+					func7()
+				end)
+			end
+		end
+	end
+
+	task.defer(function()
+		if uIListLayout1 then
+			scrollingFrame1.CanvasSize = UDim2.new(0, 0, 0, uIListLayout1.AbsoluteContentSize.Y + 6)
+		end
+	end)
+end
+
+pcall(function()
+	local BangGui = game:GetService("CoreGui"):FindFirstChild("BangGui")
+
+	if BangGui then
+		BangGui:Destroy()
+	end
+
+	local PlayerGui = LocalPlayer:FindFirstChild("PlayerGui")
+
+	if PlayerGui and PlayerGui:FindFirstChild("BangGui") then
+		PlayerGui.BangGui:Destroy()
+	end
+end)
+
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "BangGui"
+screenGui.ResetOnSpawn = false
+screenGui.IgnoreGuiInset = true
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+screenGui.DisplayOrder = 999
+screenGui.Enabled = true
+
+pcall(function()
+	if gethui then
+		screenGui.Parent = gethui()
+	else
+		screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+	end
+end)
+
+if not screenGui.Parent then
+	screenGui.Parent = LocalPlayer:WaitForChild("PlayerGui")
+end
+
+
+local frame = Instance.new("Frame")
+frame.Size = uDim2
+frame.Position = UDim2.new(0.5, -130, 0.09, 0)
+frame.BackgroundColor3 = Color3.fromRGB(5, 18, 10)
+frame.BackgroundTransparency = 0.25
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Parent = screenGui
+local uIStroke = Instance.new("UIStroke")
+uIStroke.Color = Color3.fromRGB(2, 12, 6)
+uIStroke.Thickness = 3
+uIStroke.Parent = frame
+local frame1 = Instance.new("Frame")
+frame1.Size = UDim2.new(1, 0, 0, 24)
+frame1.BackgroundColor3 = Color3.fromRGB(2, 12, 6)
+frame1.BorderSizePixel = 0
+frame1.Parent = frame
+local textLabel = Instance.new("TextLabel")
+textLabel.Size = UDim2.new(1, -60, 1, 0)
+textLabel.Position = UDim2.new(0, 2, 0, 0)
+textLabel.BackgroundTransparency = 1
+textLabel.Text = " NOX 0 DELAY BANG 👺 "
+textLabel.TextColor3 = Color3.fromRGB(80, 255, 120)
+textLabel.Font = Enum.Font.GothamBold
+textLabel.TextSize = 11
+textLabel.TextXAlignment = Enum.TextXAlignment.Left
+textLabel.Parent = frame1
+local textButton = Instance.new("TextButton")
+textButton.Size = UDim2.new(0, 22, 0, 20)
+textButton.Position = UDim2.new(1, -55, 0.5, -10)
+textButton.BackgroundColor3 = Color3.fromRGB(20, 65, 35)
+textButton.Text = "–"
+textButton.TextColor3 = Color3.new(1, 1, 1)
+textButton.Font = Enum.Font.GothamBold
+textButton.TextSize = 18
+textButton.BorderSizePixel = 0
+textButton.Parent = frame1
+local textButton1 = Instance.new("TextButton")
+textButton1.Size = UDim2.new(0, 22, 0, 20)
+textButton1.Position = UDim2.new(1, -24, 0.5, -10)
+textButton1.BackgroundColor3 = Color3.fromRGB(0, 105, 40)
+textButton1.Text = "X"
+textButton1.TextColor3 = Color3.new(1, 1, 1)
+textButton1.Font = Enum.Font.GothamBold
+textButton1.TextSize = 16
+textButton1.BorderSizePixel = 0
+textButton1.Parent = frame1
+local scrollingFrame = Instance.new("ScrollingFrame")
+scrollingFrame.Size = UDim2.new(1, -12, 1, -28)
+scrollingFrame.Position = UDim2.new(0, 6, 0, 26)
+scrollingFrame.BackgroundTransparency = 1
+scrollingFrame.BorderSizePixel = 0
+scrollingFrame.ScrollBarThickness = 5
+scrollingFrame.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 90)
+scrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+scrollingFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+scrollingFrame.ScrollingDirection = Enum.ScrollingDirection.Y
+scrollingFrame.Parent = frame
+local uIListLayout = Instance.new("UIListLayout")
+uIListLayout.Padding = UDim.new(0, 2)
+uIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+uIListLayout.Parent = scrollingFrame
+local textBox = Instance.new("TextBox")
+textBox.Size = UDim2.new(1, 0, 0, 20)
+textBox.BackgroundColor3 = Color3.fromRGB(2, 12, 6)
+textBox.BorderSizePixel = 0
+textBox.PlaceholderText = "Search player..."
+textBox.PlaceholderColor3 = Color3.fromRGB(100, 155, 115)
+textBox.Text = ""
+textBox.TextColor3 = Color3.new(1, 1, 1)
+textBox.Font = Enum.Font.Gotham
+textBox.TextSize = 11
+textBox.ClearTextOnFocus = false
+textBox.LayoutOrder = 1
+textBox.Parent = scrollingFrame
+scrollingFrame1 = Instance.new("ScrollingFrame")
+scrollingFrame1.Size = UDim2.new(1, 0, 0, 52)
+scrollingFrame1.BackgroundColor3 = Color3.fromRGB(8, 25, 14)
+scrollingFrame1.BorderSizePixel = 0
+scrollingFrame1.ScrollBarThickness = 4
+scrollingFrame1.ScrollBarImageColor3 = Color3.fromRGB(0, 255, 90)
+scrollingFrame1.CanvasSize = UDim2.new(0, 0, 0, 0)
+scrollingFrame1.LayoutOrder = 2
+scrollingFrame1.Parent = scrollingFrame
+uIListLayout1 = Instance.new("UIListLayout")
+uIListLayout1.Padding = UDim.new(0, 2)
+uIListLayout1.Parent = scrollingFrame1
+local frame2 = Instance.new("Frame")
+frame2.Size = UDim2.new(1, 0, 0, 20)
+frame2.BackgroundTransparency = 1
+frame2.LayoutOrder = 3
+frame2.Parent = scrollingFrame
+local uIListLayout2 = Instance.new("UIListLayout")
+uIListLayout2.FillDirection = Enum.FillDirection.Horizontal
+uIListLayout2.Padding = UDim.new(0, 5)
+uIListLayout2.Parent = frame2
+local textButton2 = Instance.new("TextButton")
+textButton2.Size = UDim2.new(0.5, -3, 1, 0)
+textButton2.BackgroundColor3 = Color3.fromRGB(0, 155, 55)
+textButton2.BorderSizePixel = 0
+textButton2.Text = "SELECT ALL"
+textButton2.TextColor3 = Color3.new(1, 1, 1)
+textButton2.Font = Enum.Font.GothamBold
+textButton2.TextSize = 10
+textButton2.Parent = frame2
+local textButton3 = Instance.new("TextButton")
+textButton3.Size = UDim2.new(0.5, -3, 1, 0)
+textButton3.BackgroundColor3 = Color3.fromRGB(0, 95, 35)
+textButton3.BorderSizePixel = 0
+textButton3.Text = "CLEAR ALL"
+textButton3.TextColor3 = Color3.new(1, 1, 1)
+textButton3.Font = Enum.Font.GothamBold
+textButton3.TextSize = 10
+textButton3.Parent = frame2
+textLabel1 = Instance.new("TextLabel")
+textLabel1.Size = UDim2.new(1, 0, 0, 12)
+textLabel1.BackgroundTransparency = 1
+textLabel1.Text = "Selected: 0"
+textLabel1.TextColor3 = Color3.fromRGB(125, 255, 155)
+textLabel1.Font = Enum.Font.GothamBold
+textLabel1.TextSize = 10
+textLabel1.TextXAlignment = Enum.TextXAlignment.Left
+textLabel1.LayoutOrder = 4
+textLabel1.Parent = scrollingFrame
+local textButton4 = Instance.new("TextButton")
+textButton4.Size = UDim2.new(1, 0, 0, 20)
+textButton4.BackgroundColor3 = Color3.fromRGB(0, 135, 55)
+textButton4.BackgroundTransparency = 0.25
+textButton4.BorderSizePixel = 0
+textButton4.Text = "MODE: BACK"
+textButton4.TextColor3 = Color3.new(1, 1, 1)
+textButton4.Font = Enum.Font.GothamBold
+textButton4.TextSize = 11
+textButton4.LayoutOrder = 5
+textButton4.Parent = scrollingFrame
+textLabel2 = Instance.new("TextLabel")
+textLabel2.Size = UDim2.new(1, 0, 0, 11)
+textLabel2.BackgroundTransparency = 1
+textLabel2.Text = ""
+textLabel2.TextColor3 = Color3.fromRGB(90, 255, 125)
+textLabel2.Font = Enum.Font.GothamBold
+textLabel2.TextSize = 10
+textLabel2.TextXAlignment = Enum.TextXAlignment.Left
+textLabel2.LayoutOrder = 6
+textLabel2.Parent = scrollingFrame
+frame3 = Instance.new("Frame")
+frame3.Size = UDim2.new(1, 0, 0, 28)
+frame3.BackgroundTransparency = 1
+frame3.LayoutOrder = 20
+frame3.Parent = scrollingFrame
+local uIListLayout3 = Instance.new("UIListLayout")
+uIListLayout3.FillDirection = Enum.FillDirection.Horizontal
+uIListLayout3.Padding = UDim.new(0, 32)
+uIListLayout3.Parent = frame3
+local frame4 = Instance.new("Frame")
+frame4.Size = UDim2.new(1, 0, 0, 28)
+frame4.BackgroundTransparency = 1
+frame4.LayoutOrder = 21
+frame4.Parent = scrollingFrame
+local uIListLayout4 = Instance.new("UIListLayout")
+uIListLayout4.FillDirection = Enum.FillDirection.Horizontal
+uIListLayout4.Padding = UDim.new(0, 32)
+uIListLayout4.Parent = frame4
+func13(frame4, "Sway Speed", 0.1, 5, 1.31, "x")
+func13(frame4, "Sway Amount", 0, 5, 1.5, "")
+local frame5 = Instance.new("Frame")
+frame5.Size = UDim2.new(1, 0, 0, 28)
+frame5.BackgroundTransparency = 1
+frame5.LayoutOrder = 22
+frame5.Parent = scrollingFrame
+local uIListLayout5 = Instance.new("UIListLayout")
+uIListLayout5.FillDirection = Enum.FillDirection.Horizontal
+uIListLayout5.Padding = UDim.new(0, 32)
+uIListLayout5.Parent = frame5
+func13(frame5, "Auto-switch", 0, 15, 2, "s")
+func13(frame5, "Cycle Player", 0, 15, 3, "s")
+local textLabel3 = Instance.new("TextLabel")
+textLabel3.Size = UDim2.new(1, 0, 0, 12)
+textLabel3.BackgroundTransparency = 1
+textLabel3.Text = "AUTO FAKEOUT (Sky / Void)"
+textLabel3.TextColor3 = Color3.fromRGB(100, 255, 145)
+textLabel3.Font = Enum.Font.GothamBold
+textLabel3.TextSize = 10
+textLabel3.TextXAlignment = Enum.TextXAlignment.Left
+textLabel3.LayoutOrder = 23
+textLabel3.Parent = scrollingFrame
+local frame6 = Instance.new("Frame")
+frame6.Size = UDim2.new(1, 0, 0, 28)
+frame6.BackgroundTransparency = 1
+frame6.LayoutOrder = 24
+frame6.Parent = scrollingFrame
+local uIListLayout6 = Instance.new("UIListLayout")
+uIListLayout6.FillDirection = Enum.FillDirection.Horizontal
+uIListLayout6.Padding = UDim.new(0, 32)
+uIListLayout6.Parent = frame6
+func13(frame6, "Fakeout After", 0.2, 30, 10, "s")
+func13(frame6, "Fakeout Time", 0.2, 30, 6.5, "s")
+func14()
+local frame7 = Instance.new("Frame")
+frame7.Size = UDim2.new(1, 0, 0, 24)
+frame7.BackgroundTransparency = 1
+frame7.LayoutOrder = 30
+frame7.Parent = scrollingFrame
+local uIListLayout7 = Instance.new("UIListLayout")
+uIListLayout7.FillDirection = Enum.FillDirection.Horizontal
+uIListLayout7.Padding = UDim.new(0, 6)
+uIListLayout7.Parent = frame7
+textButton5 = Instance.new("TextButton")
+textButton5.Size = UDim2.new(0.5, -3, 1, 0)
+textButton5.BackgroundColor3 = Color3.fromRGB(0, 100, 35)
+textButton5.BorderSizePixel = 0
+textButton5.Text = "Anti Sit: OFF"
+textButton5.TextColor3 = Color3.new(1, 1, 1)
+textButton5.Font = Enum.Font.GothamBold
+textButton5.TextSize = 11
+textButton5.Parent = frame7
+local textButton6 = Instance.new("TextButton")
+textButton6.Size = UDim2.new(0.5, -3, 1, 0)
+textButton6.BackgroundColor3 = Color3.fromRGB(0, 175, 65)
+textButton6.BorderSizePixel = 0
+textButton6.Text = "START"
+textButton6.TextColor3 = Color3.new(1, 1, 1)
+textButton6.Font = Enum.Font.GothamBold
+textButton6.TextSize = 12
+textButton6.Parent = frame7
+
+textBox:GetPropertyChangedSignal("Text"):Connect(function()
+	func17(textBox.Text)
+end)
+
+textButton2.MouseButton1Click:Connect(function()
+	for _, player in ipairs(Players:GetPlayers()) do
+		if player ~= LocalPlayer then
+			tbl1[player] = true
+		end
+	end
+
+	func17(textBox.Text)
+	func7()
+end)
+
+textButton3.MouseButton1Click:Connect(function()
+	tbl1 = {}
+	func17(textBox.Text)
+	func7()
+
+	if flag then
+		flag = false
+		textButton6.Text = "START"
+		textButton6.BackgroundColor3 = Color3.fromRGB(0, 175, 65)
+		func16()
+	end
+end)
+
+Players.PlayerAdded:Connect(function()
+	task.wait(0.3)
+	func17(textBox.Text)
+end)
+
+Players.PlayerRemoving:Connect(function(player)
+	if tbl1[player] then
+		tbl1[player] = nil
+		func7()
+	end
+	func17(textBox.Text)
+end)
+
+frame1.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		flag5 = true
+		Position1 = input.Position
+		Position2 = frame.Position
+	end
+end)
+
+UserInputService.InputChanged:Connect(function(input)
+	if flag5 and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+		local v1 = input.Position - Position1
+		frame.Position = UDim2.new(Position2.X.Scale, Position2.X.Offset + v1.X, Position2.Y.Scale, Position2.Y.Offset + v1.Y)
+	end
+end)
+
+UserInputService.InputEnded:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		flag5 = false
+	end
+end)
+
+textButton.MouseButton1Click:Connect(function()
+	flag1 = not flag1
+	if flag1 then
+		Position = frame.Position
+		scrollingFrame.Visible = false
+		frame.Size = uDim21
+	else
+		scrollingFrame.Visible = true
+		frame.Size = uDim2
+
+		if Position then
+			frame.Position = Position
+		end
+	end
+end)
+
+textButton1.MouseButton1Click:Connect(function()
+	if flag then
+		func16()
+	end
+
+	func9()
+	func12()
+	screenGui:Destroy()
+end)
+
+textButton4.MouseButton1Click:Connect(function()
+	if str == "BACK" then
+		str = "FACE"
+		textButton4.Text = "MODE: FACE"
+		textButton4.BackgroundColor3 = Color3.fromRGB(0, 145, 55)
+	elseif str == "FACE" then
+		str = "AUTO"
+		textButton4.Text = "MODE: AUTO"
+		textButton4.BackgroundColor3 = Color3.fromRGB(0, 210, 90)
+		str1 = "BACK"
+		num = 0
+	else
+		str = "BACK"
+		textButton4.Text = "MODE: BACK"
+		textButton4.BackgroundColor3 = Color3.fromRGB(0, 135, 55)
+	end
+
+	func5()
+	func14()
+
+	if flag and #tbl2 > 0 then
+		func16()
+		task.wait(0.1)
+		func15()
+	end
+end)
+
+textButton6.MouseButton1Click:Connect(function()
+	if flag then
+		flag = false
+		textButton6.Text = "START"
+		textButton6.BackgroundColor3 = Color3.fromRGB(0, 175, 65)
+		func16()
+	else
+		func7()
+
+		if #tbl2 == 0 then
+			textLabel1.Text = "Select players first!"
+			return
+		end
+
+		flag = true
+		textButton6.Text = "STOP"
+		textButton6.BackgroundColor3 = Color3.fromRGB(0, 110, 40)
+		num6 = 1
+		func15()
+	end
+end)
+
+textButton5.MouseButton1Click:Connect(function()
+	if flag3 then
+		func12()
+	else
+		func11()
+	end
+end)
+
+textBox.Text = ""
+func17("")
+
+task.delay(0.35, function()
+	textBox.Text = ""
+	func17("")
+end)
+
+func7()
+print("NOX MULTI HYBRID + AUTO FAKEOUT loaded")
